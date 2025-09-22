@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="461dp"
+        android:src="@drawable/popcorn"
+        android:scaleType="fitXY"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginTop="40dp"
+        android:textColor="@color/text"
+        android:fontFamily="sans-serif-light"
+        android:text="@string/welcome_text"
+
+        />
+
+    <Button
+        android:id="@+id/btn_getMeIn"
+        android:layout_width="237dp"
+        android:layout_height="39dp"
+        android:backgroundTint="@color/btn_color"
+        android:text="@string/btn_text"
+        android:textColor="@color/background"
+        android:layout_gravity="center_horizontal"
+        />
+</LinearLayout>
