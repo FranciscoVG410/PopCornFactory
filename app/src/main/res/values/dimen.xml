@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name= "title">25sp</dimen>
+    <dimen name= "titleSize">25sp</dimen>
+    <dimen name= "regText">25sp</dimen>
+    <dimen name= "descText">25sp</dimen>
+    <dimen name= "buttonText">25sp</dimen>
+    <dimen name= "paddingButton">25sp</dimen>
+    <dimen name= "marginRadioGroup">30dp</dimen>
+    <dimen name= "hpradioGroup">10dp</dimen>
+    <dimen name= "rsymbols">50dp</dimen>
+</resources>
