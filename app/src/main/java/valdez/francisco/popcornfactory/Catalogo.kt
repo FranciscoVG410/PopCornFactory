@@ -1,44 +1,49 @@
 package valdez.francisco.popcornfactory
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.BaseAdapter
-import android.widget.GridView
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 class Catalogo : AppCompatActivity() {
 
-    var peliAdapter: PeliculaAdapter? = null
-    var seriesAdapter: SeriesAdapter? = null
-    var peliculas = ArrayList<Pelicula>()
-    var series = ArrayList<Pelicula>()
+    private val peliculas = ArrayList<Pelicula>()
+    private val series = ArrayList<Pelicula>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
-
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_catalogo)
-        cargarSeries()
+
         cargarPeliculas()
-        peliAdapter = PeliculaAdapter(this, peliculas)
-        seriesAdapter = SeriesAdapter(this, series)
+        cargarSeries()
 
-        var gridMovies: GridView = findViewById(R.id.gVMovies)
-        var gridSeries: GridView = findViewById(R.id.gVSeries)
+        val rvMovies: RecyclerView = findViewById(R.id.rvMovies)
+        val rvSeries: RecyclerView = findViewById(R.id.rvSeries)
 
-        gridMovies.adapter = peliAdapter
-        gridSeries.adapter = seriesAdapter
+        rvMovies.layoutManager = GridLayoutManager(this, 3)
+        rvSeries.layoutManager = GridLayoutManager(this, 3)
+
+        rvMovies.adapter = PeliculaAdapter(this, peliculas) { pelicula, _ ->
+            abrirDetalles(pelicula)
+        }
+
+        rvSeries.adapter = PeliculaAdapter(this, series) { pelicula, _ ->
+            abrirDetalles(pelicula)
+        }
     }
 
-    fun cargarPeliculas(){
+    private fun abrirDetalles(pelicula: Pelicula) {
+        val intent = Intent(this, DetallesPelicula::class.java)
+        intent.putExtra("nombre", pelicula.titulo)
+        intent.putExtra("image", pelicula.image)
+        intent.putExtra("header", pelicula.header)
+        intent.putExtra("sinopsis", pelicula.sinopsis)
+        intent.putExtra("numberSeats", (20 - pelicula.seats.size))
+        startActivity(intent)
+    }
+
+    private fun cargarPeliculas() {
         peliculas.add(Pelicula("Big Hero 6", R.drawable.bighero6, R.drawable.headerbighero6, "When a devastating event befalls the city of San Fransokyo and catapults Hiro into the\n" +
                 "midst of danger, he turns to Baymax and his close friends adrenaline junkie Go Go\n" +
                 "Tomago, neatnik Wasabi, chemistry whiz Honey Lemon and fanboy Fred. Determined to\n" +
@@ -84,10 +89,9 @@ class Catalogo : AppCompatActivity() {
                 "could be the perfect crime. But no amount of careful planning or expertise can prepare the\n" +
                 "team for the dangerous enemy that seems to predict their every move. An enemy that only\n" +
                 "Cobb could have seen coming.", arrayListOf<Cliente>()))
-
     }
 
-    fun cargarSeries(){
+    private fun cargarSeries() {
         series.add(Pelicula("BONES", R.drawable.bones, R.drawable.bonesheader, "Dr. Temperance Brennan is a brilliant, but lonely, anthropologist whom is approached by an ambitious FBI agent, named Seely Booth, to help the bureau solve a series of unsolved crimes by identifying the long-dead bodies of missing persons by their bone structure. But both Agent Booth and Dr. Brennan and her team come up again a variety of interference from red tape, corruption, and local noncooperation.", arrayListOf<Cliente>()))
 
         series.add(Pelicula("Dr. House", R.drawable.drhouse, R.drawable.drwhoheader, "The series follows the life of anti-social, pain killer addict, witty and arrogant medical doctor Gregory\n" +
@@ -124,95 +128,5 @@ class Catalogo : AppCompatActivity() {
                 "of ten years, this average group of buddies goes through massive mayhem, family trouble, past and\n" +
                 "future romances, fights, laughs, tears and surprises as they learn what it really means to be a\n" +
                 "friend.", arrayListOf<Cliente>()))
-    }
-
-    class PeliculaAdapter: BaseAdapter {
-        var peliculas = ArrayList<Pelicula>()
-        var context: Context? = null
-
-        constructor(context: Context, peliculas: ArrayList<Pelicula>){
-            this.context = context
-            this.peliculas = peliculas
-        }
-
-        override fun getCount(): Int {
-            return peliculas.size
-        }
-
-        override fun getItem(position: Int): Any {
-            return peliculas[position]
-        }
-
-        override fun getItemId(position: Int): Long {
-            return position.toLong()
-        }
-
-        override fun getView(p0: Int, p1: View?, p2: ViewGroup?): View {
-            var pelicula = peliculas[p0]
-            var inflator = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            var vista = inflator.inflate(R.layout.pelicula, null)
-            val imagen: ImageView = vista.findViewById(R.id.iv_pelicula)
-            imagen.setImageResource(pelicula.image)
-            val nombre: TextView = vista.findViewById(R.id.tv_nombre_pelicula)
-            nombre.text = pelicula.titulo
-
-            imagen.setOnClickListener{
-                var intent = Intent(context, DetallesPelicula:: class.java)
-                intent.putExtra("nombre", pelicula.titulo)
-                intent.putExtra("image", pelicula.image)
-                intent.putExtra("header", pelicula.header)
-                intent.putExtra("sinopsis", pelicula.sinopsis)
-                intent.putExtra("numberSeats", (20-pelicula.seats.size))
-
-
-                context!!.startActivity(intent)
-            }
-            return vista
-        }
-    }
-
-    class SeriesAdapter: BaseAdapter {
-        var peliculas = ArrayList<Pelicula>()
-        var context: Context? = null
-
-        constructor(context: Context, peliculas: ArrayList<Pelicula>) {
-            this.context = context
-            this.peliculas = peliculas
-        }
-
-
-        override fun getItem(position: Int): Any {
-            return 1
-        }
-
-        override fun getItemId(position: Int): Long {
-            return position.toLong()
-        }
-
-        override fun getCount(): Int {
-            return peliculas.size
-        }
-        override fun getView(position: Int, p1: View?, p2: ViewGroup?): View {
-            var pelicula = peliculas[position]
-            var inflator = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-            var vista = inflator.inflate(R.layout.pelicula, null)
-            var imagen: ImageView = vista.findViewById(R.id.iv_pelicula)
-            var nombre: TextView = vista.findViewById(R.id.tv_nombre_pelicula)
-
-            imagen.setImageResource(pelicula.image)
-            nombre.setText(pelicula.titulo)
-
-            imagen.setOnClickListener {
-                var intent = Intent(context, DetallesPelicula::class.java)
-                intent.putExtra("nombre", pelicula.titulo)
-                intent.putExtra("image", pelicula.image)
-                intent.putExtra("header", pelicula.header)
-                intent.putExtra("sinopsis", pelicula.sinopsis)
-                intent.putExtra("numberSeats", (20 - pelicula.seats.size))
-                intent.putExtra("pos", position)
-                context!!.startActivity(intent)
-            }
-            return vista
-        }
     }
 }
